@@ -18,7 +18,10 @@ class ERM_Activator {
 	public static function activate() {
 		self::check_requirements();
 		self::create_tables();
-		flush_rewrite_rules();
+		// Diferir flush hasta la siguiente carga: el CPT se registra en init(),
+		// que corre después del activation hook. Si hacemos flush aquí, las
+		// reglas se generan sin el CPT y las URLs dan 404.
+		set_transient( 'erm_flush_rewrite_rules', true, 60 );
 	}
 
 	/**

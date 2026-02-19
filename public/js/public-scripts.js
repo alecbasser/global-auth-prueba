@@ -164,7 +164,7 @@
 			`;
 
 			const btn = article.querySelector('.erm-view-resource');
-			if (btn && resource.url) {
+			if (btn && resource.track_nonce) {
 				btn.addEventListener('click', (e) => this.trackResource(resource.id, btn));
 			}
 

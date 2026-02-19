@@ -80,3 +80,29 @@ function erm_init() {
 	}
 }
 add_action( 'plugins_loaded', 'erm_init' );
+
+/**
+ * Track view when user visits single resource page.
+ */
+function erm_track_single_resource_view() {
+	if ( ! is_singular( ERM_Post_Type::POST_TYPE ) ) {
+		return;
+	}
+
+	$post_id = get_queried_object_id();
+	if ( $post_id ) {
+		ERM_Database::record_action( $post_id, 'view' );
+	}
+}
+add_action( 'template_redirect', 'erm_track_single_resource_view' );
+
+/**
+ * Flush rewrite rules after activation (deferred until CPT is registered).
+ */
+function erm_maybe_flush_rewrite_rules() {
+	if ( get_transient( 'erm_flush_rewrite_rules' ) ) {
+		flush_rewrite_rules();
+		delete_transient( 'erm_flush_rewrite_rules' );
+	}
+}
+add_action( 'init', 'erm_maybe_flush_rewrite_rules', 99 );
