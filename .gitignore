@@ -2,10 +2,12 @@
 .DS_Store
 Thumbs.db
 
-# IDE
+# IDE / Editors
 .idea/
 .vscode/
+.cursor/
 *.sublime-*
+.cursorrules
 
 # Logs
 *.log
