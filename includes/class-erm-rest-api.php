@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API endpoints for Education Resources Manager.
+ * Endpoints REST API para Education Resources Manager.
  *
  * @package Education_Resources_Manager
  */
@@ -13,22 +13,22 @@ defined( 'ABSPATH' ) || exit;
 class ERM_REST_API {
 
 	/**
-	 * API namespace.
+	 * Espacio de nombres de la API.
 	 */
 	const NAMESPACE = 'erm/v1';
 
 	/**
-	 * Initialize.
+	 * Inicializar.
 	 */
 	public function init() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
 
 	/**
-	 * Register REST routes.
+	 * Registrar rutas REST.
 	 */
 	public function register_routes() {
-		// GET /resources - List resources with filters.
+		// GET /resources - Listar recursos con filtros.
 		register_rest_route(
 			self::NAMESPACE,
 			'/resources',
@@ -40,7 +40,7 @@ class ERM_REST_API {
 			)
 		);
 
-		// GET /resources/{id} - Get single resource.
+		// GET /resources/{id} - Obtener recurso individual.
 		register_rest_route(
 			self::NAMESPACE,
 			'/resources/(?P<id>[\d]+)',
@@ -58,7 +58,7 @@ class ERM_REST_API {
 			)
 		);
 
-		// POST /resources/{id}/track - Record view/download.
+		// POST /resources/{id}/track - Registrar vista/descarga.
 		register_rest_route(
 			self::NAMESPACE,
 			'/resources/(?P<id>[\d]+)/track',
@@ -87,7 +87,7 @@ class ERM_REST_API {
 			)
 		);
 
-		// GET /stats - Get statistics.
+		// GET /stats - Obtener estadísticas.
 		register_rest_route(
 			self::NAMESPACE,
 			'/stats',
@@ -115,7 +115,7 @@ class ERM_REST_API {
 	}
 
 	/**
-	 * Get query args for resources endpoint.
+	 * Obtener argumentos de consulta para el endpoint de recursos.
 	 *
 	 * @return array
 	 */
@@ -207,7 +207,7 @@ class ERM_REST_API {
 					),
 				);
 			} else {
-				// Categoría inexistente: devolver 0 resultados.
+				// Categoría inexistente: devolver cero resultados.
 				$args['post__in'] = array( 0 );
 			}
 		}
@@ -250,9 +250,9 @@ class ERM_REST_API {
 	}
 
 	/**
-	 * Get single resource.
+	 * Obtener recurso individual.
 	 *
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request Objeto de petición.
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_resource( $request ) {
@@ -290,9 +290,9 @@ class ERM_REST_API {
 	}
 
 	/**
-	 * Track resource view/download.
+	 * Registrar vista/descarga de recurso.
 	 *
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request Objeto de petición.
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function track_resource( $request ) {
@@ -325,9 +325,9 @@ class ERM_REST_API {
 	}
 
 	/**
-	 * Get statistics.
+	 * Obtener estadísticas.
 	 *
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request Objeto de petición.
 	 * @return WP_REST_Response
 	 */
 	public function get_stats( $request ) {
@@ -335,7 +335,7 @@ class ERM_REST_API {
 		$top_viewed = ERM_Database::get_top_viewed( 5 );
 		$by_month  = ERM_Database::get_resources_by_month( 6 );
 
-		// Enrich top viewed with post data.
+		// Enriquecer los más vistos con datos del post.
 		$top_viewed_data = array();
 		foreach ( $top_viewed as $row ) {
 			$post = get_post( $row['resource_id'] );

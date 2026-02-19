@@ -7,27 +7,43 @@
 
 ---
 
-## Endpoints
+## Resumen de Endpoints
 
-### 1. GET /resources
-Lista recursos con filtros.
+| Endpoint | Método | Descripción | Autenticación |
+|----------|--------|-------------|---------------|
+| `/resources` | GET | Listar recursos con filtros | Pública |
+| `/resources/{id}` | GET | Obtener recurso específico | Pública |
+| `/resources/{id}/track` | POST | Registrar visualización o descarga | Nonce |
+| `/stats` | GET | Estadísticas (admin) | Cookie + edit_posts |
+
+---
+
+## 1. GET /resources
+
+Lista recursos con filtros opcionales.
+
+**Autenticación:** Pública (no requiere autenticación).
 
 **Parámetros:**
-| Parámetro | Tipo   | Default | Descripción                    |
-|-----------|--------|---------|--------------------------------|
-| page      | int    | 1       | Página                         |
-| per_page  | int    | 10      | Por página (máx. 50)          |
-| type      | string | -       | course, tutorial, ebook, video (inválido = 0 resultados) |
-| level     | string | -       | beginner, intermediate, advanced (inválido = 0 resultados) |
-| category  | int/string | - | ID o slug de categoría (inválido = 0 resultados) |
-| search    | string | -       | Búsqueda por título            |
+| Parámetro | Tipo   | Default | Descripción |
+|-----------|--------|---------|-------------|
+| page      | int    | 1       | Número de página |
+| per_page  | int    | 10      | Recursos por página (máx. 50) |
+| type      | string | -       | course, tutorial, ebook, video (valor inválido = 0 resultados) |
+| level     | string | -       | beginner, intermediate, advanced (valor inválido = 0 resultados) |
+| category  | int/string | - | ID o slug de categoría (valor inválido = 0 resultados) |
+| search    | string | -       | Búsqueda por título |
 
 **Ejemplo:**
 ```
 GET /wp-json/erm/v1/resources?type=course&level=beginner&per_page=9
 ```
 
-**Respuesta (200):** Array de recursos. Headers: `X-WP-Total`, `X-WP-TotalPages`
+**Respuesta (200):** Array de objetos recurso.
+
+**Headers de respuesta:**
+- `X-WP-Total`: Total de recursos que coinciden con los filtros
+- `X-WP-TotalPages`: Número total de páginas
 
 **Objeto recurso:**
 ```json
@@ -51,32 +67,72 @@ GET /wp-json/erm/v1/resources?type=course&level=beginner&per_page=9
 
 ---
 
-### 2. GET /resources/{id}
-Obtiene un recurso específico.
+## 2. GET /resources/{id}
 
-**Respuesta (200):** Objeto recurso con `content` incluido.
+Obtiene un recurso específico por ID.
 
-**Errores:** 404 si no existe o no está publicado.
+**Autenticación:** Pública (no requiere autenticación).
+
+**Parámetros de ruta:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id        | int  | ID del recurso (post_id) |
+
+**Respuesta (200):** Objeto recurso completo con `content` incluido (contenido procesado con filtros de WordPress).
+
+**Objeto recurso:**
+```json
+{
+  "id": 123,
+  "title": "Título",
+  "content": "<p>Contenido HTML...</p>",
+  "excerpt": "Resumen...",
+  "permalink": "https://...",
+  "thumbnail": "https://...",
+  "type": "course",
+  "level": "beginner",
+  "duration": 60,
+  "url": "https://...",
+  "instructor": "Nombre",
+  "price": "Gratuito",
+  "categories": [],
+  "skills": []
+}
+```
+
+**Errores:**
+- **404**: Recurso no encontrado o no está publicado.
 
 ---
 
-### 3. POST /resources/{id}/track
-Registra visualización o descarga.
+## 3. POST /resources/{id}/track
+
+Registra una visualización o descarga del recurso.
+
+**Autenticación:** Requiere nonce específico del recurso. El nonce se incluye en la respuesta de GET /resources y GET /resources/{id}. Se verifica con `wp_verify_nonce($nonce, 'erm_track_' . $id)`.
+
+**Parámetros de ruta:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id        | int  | ID del recurso |
 
 **Body (JSON):**
+| Campo  | Tipo   | Requerido | Descripción |
+|--------|--------|-----------|-------------|
+| action | string | No        | "view" o "download". Default: "view" |
+| nonce  | string | Sí        | Nonce generado con `wp_create_nonce('erm_track_' . $id)` |
+
+**Headers:**
+- `Content-Type: application/json`
+- `X-WP-Nonce`: Nonce de wp_rest (opcional para usuarios no autenticados; el nonce del body es el crítico)
+
+**Ejemplo:**
 ```json
 {
   "action": "view",
   "nonce": "nonce_from_track_nonce_field"
 }
 ```
-
-- `action`: "view" | "download"
-- `nonce`: Requerido. Crear con `wp_create_nonce('erm_track_' . $id)`. Se incluye en la respuesta de GET /resources.
-
-**Headers:**
-- `Content-Type: application/json`
-- `X-WP-Nonce`: wp_rest nonce (para autenticación REST)
 
 **Respuesta (200):**
 ```json
@@ -87,13 +143,21 @@ Registra visualización o descarga.
 ```
 
 **Errores:**
-- 403: invalid_nonce
-- 404: Recurso no encontrado
+- **403**: `invalid_nonce` - Verificación de seguridad fallida.
+- **404**: Recurso no encontrado o no publicado.
+- **500**: Error al registrar la acción.
 
 ---
 
-### 4. GET /stats
-Estadísticas. **Requiere:** usuario con `edit_posts`.
+## 4. GET /stats
+
+Devuelve estadísticas agregadas para el panel de administración.
+
+**Autenticación:** Requiere usuario con capacidad `edit_posts`. Soporta dos métodos:
+1. **Nonce REST (X-WP-Nonce)**: Para peticiones AJAX desde el admin.
+2. **Cookie de sesión**: Fallback para acceso directo por URL en el navegador (cuando el usuario está logueado). Se valida con `wp_validate_auth_cookie()` y `user_can($user_id, 'edit_posts')`.
+
+**Parámetros:** Ninguno.
 
 **Respuesta (200):**
 ```json
@@ -111,6 +175,14 @@ Estadísticas. **Requiere:** usuario con `edit_posts`.
 }
 ```
 
+**Campos:**
+- `by_type`: Conteo de recursos por tipo (course, tutorial, ebook, video).
+- `top_viewed`: Top 5 recursos más vistos (id, title, view_count).
+- `by_month`: Recursos publicados por mes (últimos 6 meses).
+
+**Errores:**
+- **404**: Usuario no autenticado o sin permisos.
+
 ---
 
 ## Códigos de Error
@@ -119,27 +191,32 @@ Estadísticas. **Requiere:** usuario con `edit_posts`.
 |--------|--------------------|
 | 200    | OK                 |
 | 403    | Invalid nonce      |
-| 404    | Not found          |
-| 500    | Server error       |
+| 404    | Not found         |
+| 500    | Server error      |
 
 ---
 
 ## Ejemplo JavaScript
 
 ```javascript
-// Listar recursos
-const res = await fetch('/wp-json/erm/v1/resources?type=course', {
-  headers: { 'X-WP-Nonce': ermData.nonce }
-});
+// Listar recursos (pública)
+const res = await fetch('/wp-json/erm/v1/resources?type=course');
 const resources = await res.json();
+const total = res.headers.get('X-WP-Total');
 
-// Registrar tracking
+// Registrar tracking (requiere nonce del recurso)
 await fetch(`/wp-json/erm/v1/resources/${id}/track`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'X-WP-Nonce': ermData.nonce
+    'X-WP-Nonce': ermData.nonce  // opcional si no hay sesión
   },
   body: JSON.stringify({ action: 'view', nonce: resource.track_nonce })
 });
+
+// Obtener estadísticas (requiere edit_posts)
+const statsRes = await fetch('/wp-json/erm/v1/stats', {
+  headers: { 'X-WP-Nonce': ermData.nonce }
+});
+const stats = await statsRes.json();
 ```

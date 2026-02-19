@@ -18,7 +18,7 @@ class ERM_Post_Type {
 	const POST_TYPE = 'erm_resource';
 
 	/**
-	 * Meta keys for resource fields.
+	 * Claves meta para los campos del recurso.
 	 */
 	const META_TYPE        = '_erm_resource_type';
 	const META_LEVEL       = '_erm_difficulty_level';
@@ -29,14 +29,14 @@ class ERM_Post_Type {
 	const META_STATUS      = '_erm_publication_status';
 
 	/**
-	 * Valid values for meta fields.
+	 * Valores válidos para los campos meta.
 	 */
 	const VALID_TYPES   = array( 'course', 'tutorial', 'ebook', 'video' );
 	const VALID_LEVELS  = array( 'beginner', 'intermediate', 'advanced' );
 	const VALID_STATUS = array( 'draft', 'published', 'archived' );
 
 	/**
-	 * Initialize.
+	 * Inicializar.
 	 */
 	public function init() {
 		add_action( 'init', array( $this, 'register_archived_status' ), 5 );
@@ -48,7 +48,7 @@ class ERM_Post_Type {
 	}
 
 	/**
-	 * Register custom post status "archived".
+	 * Registrar estado de post personalizado "archived".
 	 */
 	public function register_archived_status() {
 		register_post_status(
@@ -69,10 +69,10 @@ class ERM_Post_Type {
 	}
 
 	/**
-	 * Map our status to WordPress post_status.
+	 * Mapear nuestro estado al post_status de WordPress.
 	 *
-	 * @param string $status Our meta status (draft, published, archived).
-	 * @return string WordPress post_status.
+	 * @param string $status Nuestro estado meta (draft, published, archived).
+	 * @return string post_status de WordPress.
 	 */
 	private static function status_to_post_status( $status ) {
 		$map = array(
@@ -84,10 +84,10 @@ class ERM_Post_Type {
 	}
 
 	/**
-	 * Map WordPress post_status to our status.
+	 * Mapear post_status de WordPress a nuestro estado.
 	 *
-	 * @param string $post_status WordPress post_status.
-	 * @return string Our meta status.
+	 * @param string $post_status post_status de WordPress.
+	 * @return string Nuestro estado meta.
 	 */
 	private static function post_status_to_status( $post_status ) {
 		$map = array(
@@ -116,7 +116,7 @@ class ERM_Post_Type {
 	}
 
 	/**
-	 * Register the custom post type.
+	 * Registrar el custom post type.
 	 */
 	public function register_post_type() {
 		$labels = array(
@@ -162,7 +162,7 @@ class ERM_Post_Type {
 
 		register_post_type( self::POST_TYPE, $args );
 
-		// Recursos no se comportan como entradas: sin comentarios, trackbacks, etc.
+		// Los recursos no se comportan como entradas: sin comentarios, trackbacks, etc.
 		remove_post_type_support( self::POST_TYPE, 'comments' );
 		remove_post_type_support( self::POST_TYPE, 'trackbacks' );
 	}
@@ -182,9 +182,9 @@ class ERM_Post_Type {
 	}
 
 	/**
-	 * Render the meta box.
+	 * Renderizar el meta box.
 	 *
-	 * @param WP_Post $post Current post object.
+	 * @param WP_Post $post Objeto post actual.
 	 */
 	public function render_meta_box( $post ) {
 		wp_nonce_field( 'erm_save_resource_meta', 'erm_resource_meta_nonce' );
@@ -336,8 +336,8 @@ class ERM_Post_Type {
 	 * Sincroniza _erm_publication_status con post_status tras guardar.
 	 * Necesario cuando el editor de bloques guarda (REST API) y el meta box no envía formulario.
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
+	 * @param int     $post_id ID del post.
+	 * @param WP_Post $post    Objeto post.
 	 */
 	public function sync_status_meta_from_post( $post_id, $post ) {
 		$post = get_post( $post_id );
@@ -349,9 +349,9 @@ class ERM_Post_Type {
 	}
 
 	/**
-	 * Get resource meta for a post.
+	 * Obtener meta del recurso para un post.
 	 *
-	 * @param int $post_id Post ID.
+	 * @param int $post_id ID del post.
 	 * @return array
 	 */
 	public static function get_resource_meta( $post_id ) {

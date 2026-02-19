@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page view.
+ * Vista de la página de configuración.
  *
  * @package Education_Resources_Manager
  */

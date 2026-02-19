@@ -3,7 +3,7 @@
  * Plugin Name:       Education Resources Manager
  * Plugin URI:        https://github.com/GlobalAuthenticity/education-resources-manager
  * Description:       Sistema de gestión de recursos educativos para WordPress (cursos, tutoriales, ebooks, videos).
- * Version:           1.0.0
+ * Version:           2.0.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Global Authenticity
@@ -18,14 +18,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// Plugin constants.
-define( 'ERM_VERSION', '1.0.0' );
+// Constantes del plugin.
+define( 'ERM_VERSION', '2.0.0' );
 define( 'ERM_FILE', __FILE__ );
 define( 'ERM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ERM_URL', plugin_dir_url( __FILE__ ) );
 define( 'ERM_BASENAME', plugin_basename( __FILE__ ) );
 
-// Include required files.
+// Incluir archivos requeridos.
 require_once ERM_PATH . 'includes/class-erm-activator.php';
 require_once ERM_PATH . 'includes/class-erm-deactivator.php';
 require_once ERM_PATH . 'includes/class-erm-post-type.php';
@@ -46,7 +46,7 @@ function erm_activate() {
 register_activation_hook( __FILE__, 'erm_activate' );
 
 /**
- * Plugin deactivation hook.
+ * Hook de desactivación del plugin.
  */
 function erm_deactivate() {
 	ERM_Deactivator::deactivate();
@@ -54,13 +54,13 @@ function erm_deactivate() {
 register_deactivation_hook( __FILE__, 'erm_deactivate' );
 
 /**
- * Initialize the plugin.
+ * Inicializar el plugin.
  */
 function erm_init() {
-	// Load text domain.
+	// Cargar dominio de texto.
 	load_plugin_textdomain( 'education-resources-manager', false, dirname( ERM_BASENAME ) . '/languages' );
 
-	// Initialize components.
+	// Inicializar componentes.
 	$erm_post_type = new ERM_Post_Type();
 	$erm_post_type->init();
 
@@ -105,7 +105,7 @@ function erm_track_single_resource_view() {
 add_action( 'template_redirect', 'erm_track_single_resource_view' );
 
 /**
- * Flush rewrite rules after activation (deferred until CPT is registered).
+ * Vaciar reglas de reescritura tras la activación (diferido hasta que el CPT se registre).
  */
 function erm_maybe_flush_rewrite_rules() {
 	if ( get_transient( 'erm_flush_rewrite_rules' ) ) {

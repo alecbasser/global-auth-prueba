@@ -1,6 +1,6 @@
 <?php
 /**
- * Fired during plugin activation.
+ * Se ejecuta durante la activación del plugin.
  *
  * @package Education_Resources_Manager
  */
@@ -21,14 +21,14 @@ class ERM_Activator {
 		self::create_tables();
 		self::migrate_status_to_post_status();
 		// Diferir flush hasta la siguiente carga: el CPT se registra en init(),
-		// que corre después del activation hook. Si hacemos flush aquí, las
-		// reglas se generan sin el CPT y las URLs dan 404.
+		// que se ejecuta después del hook de activación. Si hacemos flush aquí, las
+		// reglas se generan sin el CPT y las URLs devuelven 404.
 		set_transient( 'erm_flush_rewrite_rules', true, 60 );
 	}
 
 	/**
-	 * Migrate meta status to post_status for existing resources.
-	 * Ensures posts with _erm_publication_status = 'archived' get post_status = 'archived'.
+	 * Migrar estado meta a post_status para recursos existentes.
+	 * Asegura que los posts con _erm_publication_status = 'archived' obtengan post_status = 'archived'.
 	 */
 	private static function migrate_status_to_post_status() {
 		$posts = get_posts( array(
@@ -85,7 +85,7 @@ class ERM_Activator {
 	}
 
 	/**
-	 * Create custom database tables.
+	 * Crear tablas de base de datos personalizadas.
 	 */
 	private static function create_tables() {
 		global $wpdb;
@@ -114,7 +114,7 @@ class ERM_Activator {
 	}
 
 	/**
-	 * Register custom post status "archived" (needed before migration).
+	 * Registrar estado de post personalizado "archived" (necesario antes de la migración).
 	 */
 	private static function register_archived_status() {
 		register_post_status(

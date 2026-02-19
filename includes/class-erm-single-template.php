@@ -1,7 +1,7 @@
 <?php
 /**
- * Single resource - inject styled meta into theme content.
- * Respeta el header y footer del tema.
+ * Recurso individual: inyectar meta con estilo en el contenido del tema.
+ * Respeta el encabezado y pie del tema.
  *
  * @package Education_Resources_Manager
  */
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 class ERM_Single_Template {
 
 	/**
-	 * Initialize.
+	 * Inicializar.
 	 */
 	public function init() {
 		add_filter( 'the_content', array( $this, 'add_resource_meta' ), 10, 1 );
@@ -23,9 +23,9 @@ class ERM_Single_Template {
 	}
 
 	/**
-	 * Add body class for single resource.
+	 * Agregar clase body para recurso individual.
 	 *
-	 * @param array $classes Body classes.
+	 * @param array $classes Clases del body.
 	 * @return array
 	 */
 	public function body_class( $classes ) {
@@ -39,9 +39,9 @@ class ERM_Single_Template {
 	}
 
 	/**
-	 * Add resource meta to content (badges, author, CTA).
+	 * Agregar meta del recurso al contenido (insignias, autor, CTA).
 	 *
-	 * @param string $content Post content.
+	 * @param string $content Contenido del post.
 	 * @return string
 	 */
 	public function add_resource_meta( $content ) {
@@ -162,7 +162,7 @@ class ERM_Single_Template {
 	}
 
 	/**
-	 * Enqueue styles and scripts for single resource page.
+	 * Cargar estilos y scripts para la página de recurso individual.
 	 */
 	public function enqueue_assets() {
 		if ( ! is_singular( ERM_Post_Type::POST_TYPE ) ) {

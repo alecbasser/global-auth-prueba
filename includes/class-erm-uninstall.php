@@ -1,6 +1,6 @@
 <?php
 /**
- * Uninstall handler - full data cleanup with confirmation.
+ * Manejador de desinstalación: limpieza completa de datos con confirmación.
  *
  * @package Education_Resources_Manager
  */
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 class ERM_Uninstall {
 
 	/**
-	 * Page slug.
+	 * Slug de la página.
 	 */
 	const PAGE_SLUG = 'erm-desinstalar';
 
@@ -27,9 +27,9 @@ class ERM_Uninstall {
 	}
 
 	/**
-	 * Add "Desinstalar" link to plugin actions.
+	 * Agregar enlace "Desinstalar" a las acciones del plugin.
 	 *
-	 * @param array $links Plugin action links.
+	 * @param array $links Enlaces de acción del plugin.
 	 * @return array
 	 */
 	public function add_uninstall_link( $links ) {
@@ -57,7 +57,7 @@ class ERM_Uninstall {
 	}
 
 	/**
-	 * Handle uninstall form submission.
+	 * Procesar envío del formulario de desinstalación.
 	 */
 	public function handle_uninstall() {
 		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== self::PAGE_SLUG ) {
@@ -76,10 +76,10 @@ class ERM_Uninstall {
 
 		$this->run_full_cleanup();
 
-		// Deactivate plugin.
+		// Desactivar plugin.
 		deactivate_plugins( ERM_BASENAME );
 
-		// Show success page (no redirect - plugin is deactivated so we output now).
+		// Mostrar página de éxito (sin redirección: el plugin está desactivado, así que mostramos ahora).
 		$this->render_success_page();
 		exit;
 	}
@@ -139,7 +139,7 @@ class ERM_Uninstall {
 	}
 
 	/**
-	 * Render success page after uninstall.
+	 * Renderizar página de éxito tras la desinstalación.
 	 */
 	private function render_success_page() {
 		wp_safe_redirect( admin_url( 'plugins.php?erm_desinstalado=1&plugin_status=inactive' ) );
@@ -152,7 +152,7 @@ class ERM_Uninstall {
 	private function run_full_cleanup() {
 		global $wpdb;
 
-		// 1. Delete all resources (posts).
+		// 1. Eliminar todos los recursos (posts).
 		$posts = get_posts( array(
 			'post_type'      => ERM_Post_Type::POST_TYPE,
 			'post_status'    => 'any',
@@ -179,11 +179,11 @@ class ERM_Uninstall {
 			}
 		}
 
-		// 3. Drop tracking table.
+		// 3. Eliminar tabla de seguimiento.
 		$table_name = $wpdb->prefix . 'erm_resource_tracking';
 		$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
 
-		// 4. Delete options.
+		// 4. Eliminar opciones.
 		delete_option( 'erm_db_version' );
 	}
 }

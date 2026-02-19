@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin panel for Education Resources Manager.
+ * Panel de administración para Education Resources Manager.
  *
  * @package Education_Resources_Manager
  */
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 class ERM_Admin {
 
 	/**
-	 * Menu slug.
+	 * Slug del menú.
 	 */
 	const MENU_SLUG = 'erm-dashboard';
 
@@ -40,9 +40,9 @@ class ERM_Admin {
 	}
 
 	/**
-	 * Get a plugin setting with fallback to default.
+	 * Obtener configuración del plugin con valor por defecto.
 	 *
-	 * @param string $key Setting key.
+	 * @param string $key Clave de configuración.
 	 * @return mixed
 	 */
 	public static function get_setting( $key ) {
@@ -94,9 +94,9 @@ class ERM_Admin {
 	}
 
 	/**
-	 * Sanitize layout option.
+	 * Sanitizar opción de diseño.
 	 *
-	 * @param string $value Layout value.
+	 * @param string $value Valor del diseño.
 	 * @return string
 	 */
 	public function sanitize_layout( $value ) {
@@ -142,7 +142,7 @@ class ERM_Admin {
 	}
 
 	/**
-	 * Enqueue block editor assets for erm_resource (custom status panel).
+	 * Cargar recursos del editor de bloques para erm_resource (panel de estado personalizado).
 	 */
 	public function enqueue_block_editor_assets() {
 		$post_type = '';
@@ -221,9 +221,9 @@ class ERM_Admin {
 	}
 
 	/**
-	 * Add dropdown filters to resources list.
+	 * Agregar filtros desplegables al listado de recursos.
 	 *
-	 * @param string $post_type Current post type.
+	 * @param string $post_type Tipo de post actual.
 	 */
 	public function add_list_filters( $post_type ) {
 		if ( $post_type !== ERM_Post_Type::POST_TYPE ) {
@@ -307,7 +307,7 @@ class ERM_Admin {
 	}
 
 	/**
-	 * Render dashboard page.
+	 * Renderizar página del panel de control.
 	 */
 	public function render_dashboard() {
 		if ( ! current_user_can( 'edit_posts' ) ) {

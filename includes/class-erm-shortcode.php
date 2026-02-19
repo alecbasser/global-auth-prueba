@@ -1,6 +1,6 @@
 <?php
 /**
- * Shortcode for displaying education resources.
+ * Shortcode para mostrar recursos educativos.
  *
  * @package Education_Resources_Manager
  */
@@ -18,7 +18,7 @@ class ERM_Shortcode {
 	const SHORTCODE = 'recursos_educativos';
 
 	/**
-	 * Initialize.
+	 * Inicializar.
 	 */
 	public function init() {
 		add_shortcode( self::SHORTCODE, array( $this, 'render' ) );
@@ -26,7 +26,7 @@ class ERM_Shortcode {
 	}
 
 	/**
-	 * Enqueue frontend assets.
+	 * Cargar recursos del frontend.
 	 */
 	public function enqueue_assets() {
 		global $post;
@@ -74,9 +74,9 @@ class ERM_Shortcode {
 	}
 
 	/**
-	 * Render the shortcode.
+	 * Renderizar el shortcode.
 	 *
-	 * @param array $atts Shortcode attributes.
+	 * @param array $atts Atributos del shortcode.
 	 * @return string
 	 */
 	public function render( $atts ) {
@@ -151,11 +151,11 @@ class ERM_Shortcode {
 			</div>
 
 			<div class="erm-resources-grid" role="list">
-				<!-- Resources loaded via JS -->
+				<!-- Recursos cargados vía JS -->
 			</div>
 
 			<div class="erm-pagination" role="navigation" aria-label="<?php esc_attr_e( 'Paginación de recursos', 'education-resources-manager' ); ?>">
-				<!-- Pagination loaded via JS -->
+				<!-- Paginación cargada vía JS -->
 			</div>
 
 			<div class="erm-no-results" style="display: none;">

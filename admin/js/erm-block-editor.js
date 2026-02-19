@@ -1,14 +1,14 @@
 /**
- * Block editor customization for erm_resource: replace default status panel
- * with a simplified panel (Borrador / Publicado / Archivado).
- * Bidirectional sync with the "Detalles del Recurso" meta box select.
+ * Personalización del editor de bloques para erm_resource: reemplazar el panel
+ * de estado por defecto con un panel simplificado (Borrador / Publicado / Archivado).
+ * Sincronización bidireccional con el select de la meta caja "Detalles del Recurso".
  *
  * @package Education_Resources_Manager
  */
 ( function () {
 	'use strict';
 
-	/* ── helpers ── */
+	/* ── Funciones auxiliares ── */
 
 	var el        = wp.element.createElement;
 	var useEffect = wp.element.useEffect;
@@ -38,7 +38,7 @@
 		return null;
 	}
 
-	/* ── main component ── */
+	/* ── Componente principal ── */
 
 	function ERMStatusPanel() {
 
@@ -57,12 +57,12 @@
 
 		var currentStatus = postData.status;
 
-		/* ── Hide default post-status panel ── */
+		/* ── Ocultar panel de estado de publicación por defecto ── */
 		useEffect( function () {
 			wp.data.dispatch( 'core/editor' ).removeEditorPanel( 'post-status' );
 		}, [] );
 
-		/* ── Sync: editor → meta box select ── */
+		/* ── Sincronización: editor → select de meta caja ── */
 		useEffect( function () {
 			var metaVal = POST_TO_META[ currentStatus ] || 'published';
 			var sel = findMetaBoxSelect();
@@ -91,12 +91,12 @@
 			return function () { clearInterval( interval ); };
 		}, [] );
 
-		/* ── Change handler ── */
+		/* ── Manejador de cambio ── */
 		function onStatusChange( newStatus ) {
 			wp.data.dispatch( 'core/editor' ).editPost( { status: newStatus } );
 		}
 
-		/* ── Render ── */
+		/* ── Renderizado ── */
 		var options = [
 			{ value: 'draft',    label: __( 'Borrador', 'education-resources-manager' ),  desc: __( 'No listo para publicar.', 'education-resources-manager' ) },
 			{ value: 'publish',  label: __( 'Publicado', 'education-resources-manager' ), desc: __( 'Visible por todos.', 'education-resources-manager' ) },
@@ -141,7 +141,7 @@
 		);
 	}
 
-	/* ── register ── */
+	/* ── Registro ── */
 
 	wp.domReady( function () {
 		if ( ! wp.plugins || ! wp.data || ! wp.element || ! PluginDocumentSettingPanel ) {

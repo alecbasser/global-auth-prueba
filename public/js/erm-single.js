@@ -1,6 +1,6 @@
 /**
- * Single Resource - Vanilla JavaScript
- * Share, bookmark
+ * Recurso individual - JavaScript Vanilla
+ * Compartir, marcar como favorito
  */
 
 (function () {

@@ -24,7 +24,7 @@
 	color: var(--erm-text);
 }
 
-/* Action buttons: share, favorite (badge style) */
+/* Botones de acción: compartir, favorito (estilo badge) */
 .erm-single__actions {
 	display: flex;
 	flex-wrap: wrap;
@@ -53,7 +53,7 @@
 	display: none;
 }
 
-/* Rounded featured image (theme's post thumbnail) */
+/* Imagen destacada redondeada (miniatura del tema) */
 .erm-single-page .post-thumbnail img,
 .erm-single-page .wp-block-post-featured-image img,
 .erm-single-page .entry-thumbnail img,
@@ -71,12 +71,12 @@
 	overflow: hidden;
 }
 
-/* Meta block */
+/* Bloque de meta */
 .erm-single__meta-block {
 	margin-bottom: 1.5rem;
 }
 
-/* Badges */
+/* Insignias */
 .erm-single__badges {
 	display: flex;
 	flex-wrap: wrap;
@@ -200,7 +200,7 @@
 	font-size: 1.1rem;
 }
 
-/* Body / Prose */
+/* Cuerpo / Prosa */
 .erm-single__body {
 	margin-bottom: 2rem;
 }
@@ -256,9 +256,9 @@
 	text-decoration: underline;
 }
 
-/* ── Side-by-side layout ── */
+/* ── Layout lado a lado ── */
 
-/* Hide theme's featured image when we embed our own */
+/* Ocultar imagen destacada del tema cuando incrustamos la nuestra */
 .erm-single-page--side-by-side .wp-block-post-featured-image,
 .erm-single-page--side-by-side .post-thumbnail,
 .erm-single-page--side-by-side .entry-thumbnail {

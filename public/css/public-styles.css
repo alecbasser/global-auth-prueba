@@ -1,5 +1,5 @@
 /**
- * Education Resources Manager - Public Styles
+ * Education Resources Manager - Estilos públicos
  *
  * @package Education_Resources_Manager
  */
@@ -12,7 +12,7 @@
 	color: #0f172a;
 }
 
-/* Filters */
+/* Filtros */
 .erm-filters {
 	background: #f8fafc;
 	border: 1px solid #e2e8f0;
@@ -88,7 +88,7 @@
 	color: #64748b;
 }
 
-/* Resources grid */
+/* Grilla de recursos */
 .erm-resources-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -235,7 +235,7 @@
 	cursor: not-allowed;
 }
 
-/* Pagination */
+/* Paginación */
 .erm-pagination {
 	display: flex;
 	justify-content: center;
@@ -278,7 +278,7 @@
 	margin: 0 1rem;
 }
 
-/* No results */
+/* Sin resultados */
 .erm-no-results {
 	text-align: center;
 	padding: 3rem 1rem;

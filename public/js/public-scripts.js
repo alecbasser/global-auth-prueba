@@ -1,5 +1,5 @@
 /**
- * Education Resources Manager - Public Scripts
+ * Education Resources Manager - Scripts públicos
  *
  * @package Education_Resources_Manager
  */
