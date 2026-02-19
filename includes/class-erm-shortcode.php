@@ -39,14 +39,14 @@ class ERM_Shortcode {
 			'erm-public',
 			ERM_URL . 'public/css/public-styles.css',
 			array(),
-			ERM_VERSION
+			(string) filemtime( ERM_PATH . 'public/css/public-styles.css' )
 		);
 
 		wp_enqueue_script(
 			'erm-public',
 			ERM_URL . 'public/js/public-scripts.js',
 			array(),
-			ERM_VERSION,
+			(string) filemtime( ERM_PATH . 'public/js/public-scripts.js' ),
 			true
 		);
 
@@ -54,8 +54,9 @@ class ERM_Shortcode {
 			'erm-public',
 			'ermData',
 			array(
-				'apiUrl'   => rest_url( ERM_REST_API::NAMESPACE ),
-				'nonce'    => wp_create_nonce( 'wp_rest' ),
+				'apiUrl'           => rest_url( ERM_REST_API::NAMESPACE ),
+				'nonce'            => wp_create_nonce( 'wp_rest' ),
+				'excerptMaxChars'  => (int) ERM_Admin::get_setting( 'erm_excerpt_max_chars' ),
 				'i18n'     => array(
 					'loading'   => __( 'Cargando...', 'education-resources-manager' ),
 					'noResults' => __( 'No se encontraron recursos.', 'education-resources-manager' ),

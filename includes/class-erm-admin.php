@@ -20,13 +20,37 @@ class ERM_Admin {
 	/**
 	 * Initialize.
 	 */
+	/**
+	 * Default plugin settings.
+	 */
+	const DEFAULTS = array(
+		'erm_excerpt_max_chars' => 150,
+		'erm_single_layout'    => 'default',
+	);
+
 	public function init() {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
 		add_filter( 'manage_' . ERM_Post_Type::POST_TYPE . '_posts_columns', array( $this, 'add_columns' ) );
 		add_action( 'manage_' . ERM_Post_Type::POST_TYPE . '_posts_custom_column', array( $this, 'render_column' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( $this, 'add_list_filters' ) );
 		add_filter( 'pre_get_posts', array( $this, 'filter_list_query' ) );
+	}
+
+	/**
+	 * Get a plugin setting with fallback to default.
+	 *
+	 * @param string $key Setting key.
+	 * @return mixed
+	 */
+	public static function get_setting( $key ) {
+		$value = get_option( $key, null );
+		if ( null === $value && isset( self::DEFAULTS[ $key ] ) ) {
+			return self::DEFAULTS[ $key ];
+		}
+		return $value;
 	}
 
 	/**
@@ -41,6 +65,52 @@ class ERM_Admin {
 			self::MENU_SLUG,
 			array( $this, 'render_dashboard' )
 		);
+
+		add_submenu_page(
+			'edit.php?post_type=' . ERM_Post_Type::POST_TYPE,
+			__( 'Configuración', 'education-resources-manager' ),
+			__( 'Configuración', 'education-resources-manager' ),
+			'manage_options',
+			'erm-settings',
+			array( $this, 'render_settings' )
+		);
+	}
+
+	/**
+	 * Register plugin settings.
+	 */
+	public function register_settings() {
+		register_setting( 'erm_settings', 'erm_excerpt_max_chars', array(
+			'type'              => 'integer',
+			'sanitize_callback' => 'absint',
+			'default'           => self::DEFAULTS['erm_excerpt_max_chars'],
+		) );
+
+		register_setting( 'erm_settings', 'erm_single_layout', array(
+			'type'              => 'string',
+			'sanitize_callback' => array( $this, 'sanitize_layout' ),
+			'default'           => self::DEFAULTS['erm_single_layout'],
+		) );
+	}
+
+	/**
+	 * Sanitize layout option.
+	 *
+	 * @param string $value Layout value.
+	 * @return string
+	 */
+	public function sanitize_layout( $value ) {
+		return in_array( $value, array( 'default', 'side-by-side' ), true ) ? $value : 'default';
+	}
+
+	/**
+	 * Render settings page.
+	 */
+	public function render_settings() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		include ERM_PATH . 'admin/views/settings-page.php';
 	}
 
 	/**
@@ -57,7 +127,7 @@ class ERM_Admin {
 			'erm-admin',
 			ERM_URL . 'admin/css/admin-styles.css',
 			array(),
-			ERM_VERSION
+			(string) filemtime( ERM_PATH . 'admin/css/admin-styles.css' )
 		);
 
 		if ( strpos( $hook_suffix, self::MENU_SLUG ) !== false ) {
@@ -65,10 +135,35 @@ class ERM_Admin {
 				'erm-admin',
 				ERM_URL . 'admin/js/admin-scripts.js',
 				array(),
-				ERM_VERSION,
+				(string) filemtime( ERM_PATH . 'admin/js/admin-scripts.js' ),
 				true
 			);
 		}
+	}
+
+	/**
+	 * Enqueue block editor assets for erm_resource (custom status panel).
+	 */
+	public function enqueue_block_editor_assets() {
+		$post_type = '';
+		if ( isset( $_GET['post_type'] ) ) {
+			$post_type = sanitize_text_field( wp_unslash( $_GET['post_type'] ) );
+		} elseif ( isset( $_GET['post'] ) ) {
+			$post = get_post( absint( $_GET['post'] ) );
+			if ( $post ) {
+				$post_type = $post->post_type;
+			}
+		}
+		if ( $post_type !== ERM_Post_Type::POST_TYPE ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'erm-block-editor',
+			ERM_URL . 'admin/js/erm-block-editor.js',
+			array( 'wp-plugins', 'wp-editor', 'wp-element', 'wp-data', 'wp-i18n', 'wp-dom-ready' ),
+			(string) filemtime( ERM_PATH . 'admin/js/erm-block-editor.js' )
+		);
 	}
 
 	/**

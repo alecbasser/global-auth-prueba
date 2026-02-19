@@ -39,9 +39,80 @@ class ERM_Post_Type {
 	 * Initialize.
 	 */
 	public function init() {
+		add_action( 'init', array( $this, 'register_archived_status' ), 5 );
 		add_action( 'init', array( $this, 'register_post_type' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_meta' ), 10, 2 );
+		add_action( 'save_post_' . self::POST_TYPE, array( $this, 'sync_status_meta_from_post' ), 20, 2 );
+		add_filter( 'display_post_states', array( $this, 'display_post_states' ), 10, 2 );
+	}
+
+	/**
+	 * Register custom post status "archived".
+	 */
+	public function register_archived_status() {
+		register_post_status(
+			'archived',
+			array(
+				'label'                     => _x( 'Archivado', 'post status', 'education-resources-manager' ),
+				'public'                    => false,
+				'exclude_from_search'       => true,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				'label_count'               => _n_noop(
+					'Archivado <span class="count">(%s)</span>',
+					'Archivados <span class="count">(%s)</span>',
+					'education-resources-manager'
+				),
+			)
+		);
+	}
+
+	/**
+	 * Map our status to WordPress post_status.
+	 *
+	 * @param string $status Our meta status (draft, published, archived).
+	 * @return string WordPress post_status.
+	 */
+	private static function status_to_post_status( $status ) {
+		$map = array(
+			'draft'     => 'draft',
+			'published' => 'publish',
+			'archived'  => 'archived',
+		);
+		return $map[ $status ] ?? 'publish';
+	}
+
+	/**
+	 * Map WordPress post_status to our status.
+	 *
+	 * @param string $post_status WordPress post_status.
+	 * @return string Our meta status.
+	 */
+	private static function post_status_to_status( $post_status ) {
+		$map = array(
+			'draft'   => 'draft',
+			'publish' => 'published',
+			'archived' => 'archived',
+		);
+		return $map[ $post_status ] ?? 'published';
+	}
+
+	/**
+	 * Display post states in admin list.
+	 *
+	 * @param array   $states Post states.
+	 * @param WP_Post $post   Post object.
+	 * @return array
+	 */
+	public function display_post_states( $states, $post ) {
+		if ( $post->post_type !== self::POST_TYPE ) {
+			return $states;
+		}
+		if ( $post->post_status === 'archived' ) {
+			$states['archived'] = __( 'Archivado', 'education-resources-manager' );
+		}
+		return $states;
 	}
 
 	/**
@@ -90,6 +161,10 @@ class ERM_Post_Type {
 		);
 
 		register_post_type( self::POST_TYPE, $args );
+
+		// Recursos no se comportan como entradas: sin comentarios, trackbacks, etc.
+		remove_post_type_support( self::POST_TYPE, 'comments' );
+		remove_post_type_support( self::POST_TYPE, 'trackbacks' );
 	}
 
 	/**
@@ -114,13 +189,13 @@ class ERM_Post_Type {
 	public function render_meta_box( $post ) {
 		wp_nonce_field( 'erm_save_resource_meta', 'erm_resource_meta_nonce' );
 
-		$type     = get_post_meta( $post->ID, self::META_TYPE, true );
-		$level    = get_post_meta( $post->ID, self::META_LEVEL, true );
-		$duration = get_post_meta( $post->ID, self::META_DURATION, true );
-		$url      = get_post_meta( $post->ID, self::META_URL, true );
+		$type      = get_post_meta( $post->ID, self::META_TYPE, true );
+		$level     = get_post_meta( $post->ID, self::META_LEVEL, true );
+		$duration  = get_post_meta( $post->ID, self::META_DURATION, true );
+		$url       = get_post_meta( $post->ID, self::META_URL, true );
 		$instructor = get_post_meta( $post->ID, self::META_INSTRUCTOR, true );
-		$price    = get_post_meta( $post->ID, self::META_PRICE, true );
-		$status   = get_post_meta( $post->ID, self::META_STATUS, true );
+		$price     = get_post_meta( $post->ID, self::META_PRICE, true );
+		$status    = self::post_status_to_status( $post->post_status );
 
 		$type_labels = array(
 			'course'   => __( 'Curso', 'education-resources-manager' ),
@@ -191,7 +266,7 @@ class ERM_Post_Type {
 				<td>
 					<select name="erm_status" id="erm_status">
 						<?php foreach ( $status_labels as $value => $label ) : ?>
-							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $status ?: 'published', $value ); ?>><?php echo esc_html( $label ); ?></option>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $status, $value ); ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</td>
@@ -244,7 +319,33 @@ class ERM_Post_Type {
 		$status = isset( $_POST['erm_status'] ) ? sanitize_text_field( wp_unslash( $_POST['erm_status'] ) ) : 'published';
 		if ( in_array( $status, self::VALID_STATUS, true ) ) {
 			update_post_meta( $post_id, self::META_STATUS, $status );
+
+			$wp_status = self::status_to_post_status( $status );
+			if ( get_post_status( $post_id ) !== $wp_status ) {
+				remove_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_meta' ), 10 );
+				wp_update_post( array(
+					'ID'          => $post_id,
+					'post_status' => $wp_status,
+				) );
+				add_action( 'save_post_' . self::POST_TYPE, array( $this, 'save_meta' ), 10, 2 );
+			}
 		}
+	}
+
+	/**
+	 * Sincroniza _erm_publication_status con post_status tras guardar.
+	 * Necesario cuando el editor de bloques guarda (REST API) y el meta box no envía formulario.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 */
+	public function sync_status_meta_from_post( $post_id, $post ) {
+		$post = get_post( $post_id );
+		if ( ! $post || $post->post_type !== self::POST_TYPE ) {
+			return;
+		}
+		$meta_status = self::post_status_to_status( $post->post_status );
+		update_post_meta( $post_id, self::META_STATUS, $meta_status );
 	}
 
 	/**
@@ -254,6 +355,7 @@ class ERM_Post_Type {
 	 * @return array
 	 */
 	public static function get_resource_meta( $post_id ) {
+		$post = get_post( $post_id );
 		return array(
 			'type'       => get_post_meta( $post_id, self::META_TYPE, true ),
 			'level'      => get_post_meta( $post_id, self::META_LEVEL, true ),
@@ -261,7 +363,7 @@ class ERM_Post_Type {
 			'url'        => get_post_meta( $post_id, self::META_URL, true ),
 			'instructor' => get_post_meta( $post_id, self::META_INSTRUCTOR, true ),
 			'price'      => get_post_meta( $post_id, self::META_PRICE, true ),
-			'status'     => get_post_meta( $post_id, self::META_STATUS, true ) ?: 'published',
+			'status'     => $post ? self::post_status_to_status( $post->post_status ) : 'published',
 		);
 	}
 }

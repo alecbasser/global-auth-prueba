@@ -34,6 +34,8 @@ require_once ERM_PATH . 'includes/class-erm-database.php';
 require_once ERM_PATH . 'includes/class-erm-admin.php';
 require_once ERM_PATH . 'includes/class-erm-rest-api.php';
 require_once ERM_PATH . 'includes/class-erm-shortcode.php';
+require_once ERM_PATH . 'includes/class-erm-single-template.php';
+require_once ERM_PATH . 'includes/class-erm-uninstall.php';
 
 /**
  * Plugin activation hook.
@@ -74,9 +76,15 @@ function erm_init() {
 	$erm_shortcode = new ERM_Shortcode();
 	$erm_shortcode->init();
 
+	$erm_single_template = new ERM_Single_Template();
+	$erm_single_template->init();
+
 	if ( is_admin() ) {
 		$erm_admin = new ERM_Admin();
 		$erm_admin->init();
+
+		$erm_uninstall = new ERM_Uninstall();
+		$erm_uninstall->init();
 	}
 }
 add_action( 'plugins_loaded', 'erm_init' );

@@ -126,9 +126,9 @@
 
 			const typeLabel = typeLabels[resource.type] || resource.type;
 			const levelLabel = levelLabels[resource.level] || resource.level;
-			const priceDisplay = !resource.price || resource.price === '0' || resource.price.toLowerCase() === 'gratuito'
-				? (ermData.i18n.free || 'Gratuito')
-				: resource.price;
+		const priceDisplay = !resource.price || resource.price === '0' || resource.price.toLowerCase() === 'gratuito'
+			? (ermData.i18n.free || 'Gratuito')
+			: this.formatPrice(resource.price);
 			const durationText = resource.duration
 				? `${resource.duration} ${ermData.i18n.min || 'min'}`
 				: '';
@@ -147,7 +147,7 @@
 					<h3 class="erm-resource-card__title">
 						<a href="${this.escapeHtml(resource.permalink)}" target="_blank" rel="noopener">${this.escapeHtml(resource.title)}</a>
 					</h3>
-					${resource.excerpt ? `<p class="erm-resource-card__excerpt">${this.escapeHtml(resource.excerpt)}</p>` : ''}
+					${resource.excerpt ? `<p class="erm-resource-card__excerpt">${this.escapeHtml(this.truncateText(resource.excerpt))}</p>` : ''}
 					<div class="erm-resource-card__footer">
 						${durationText ? `<span class="erm-resource-card__duration">${durationText}</span>` : ''}
 						${priceDisplay ? `<span class="erm-resource-card__price">${this.escapeHtml(priceDisplay)}</span>` : ''}
@@ -189,6 +189,18 @@
 			}).catch(() => {}).finally(() => {
 				btn.disabled = false;
 			});
+		},
+
+		formatPrice: function (value) {
+			var num = parseFloat(value);
+			if (isNaN(num)) return value;
+			return '$ ' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+		},
+
+		truncateText: function (text) {
+			var max = parseInt(ermData.excerptMaxChars || 0, 10);
+			if (!max || !text || text.length <= max) return text;
+			return text.substring(0, max).replace(/\s+\S*$/, '') + '…';
 		},
 
 		escapeHtml: function (text) {

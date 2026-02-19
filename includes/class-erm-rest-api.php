@@ -140,27 +140,14 @@ class ERM_REST_API {
 	public function get_resources( $request ) {
 		$args = array(
 			'post_type'      => ERM_Post_Type::POST_TYPE,
-			'post_status'   => 'publish',
-			'paged'         => $request->get_param( 'page' ) ?: 1,
+			'post_status'    => 'publish',
+			'paged'          => $request->get_param( 'page' ) ?: 1,
 			'posts_per_page' => min( $request->get_param( 'per_page' ) ?: 10, 50 ),
-			'orderby'       => 'date',
-			'order'         => 'DESC',
+			'orderby'        => 'date',
+			'order'          => 'DESC',
 		);
 
-		$meta_query = array(
-			'relation' => 'AND',
-			array(
-				'relation' => 'OR',
-				array(
-					'key'   => ERM_Post_Type::META_STATUS,
-					'value' => 'published',
-				),
-				array(
-					'key'     => ERM_Post_Type::META_STATUS,
-					'compare' => 'NOT EXISTS',
-				),
-			),
-		);
+		$meta_query = array();
 
 		$type = $request->get_param( 'type' );
 		if ( ! empty( $type ) ) {
@@ -186,7 +173,9 @@ class ERM_REST_API {
 			}
 		}
 
-		$args['meta_query'] = $meta_query;
+		if ( ! empty( $meta_query ) ) {
+			$args['meta_query'] = $meta_query;
+		}
 
 		$category = $request->get_param( 'category' );
 		if ( ! empty( $category ) ) {

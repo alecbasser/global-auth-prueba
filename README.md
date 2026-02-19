@@ -77,6 +77,11 @@ education-resources-manager/
 
 Ver carpeta `/docs` para documentación detallada de arquitectura, base de datos y API.
 
+### Desinstalación
+
+- **Eliminar** (botón de WordPress): Quita los archivos del plugin pero conserva los datos (recursos, categorías, visualizaciones) para poder recuperarlos al reinstalar.
+- **Desinstalar** (enlace rojo en la lista de plugins): Borra todos los datos del plugin (recursos, categorías, visualizaciones) y desactiva el plugin. Muestra confirmación antes de ejecutar.
+
 ## Licencia
 
 GPL v2 or later

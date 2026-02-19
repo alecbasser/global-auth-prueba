@@ -1,6 +1,10 @@
 <?php
 /**
- * Uninstall script - runs when plugin is deleted.
+ * Uninstall script - runs when plugin is deleted via WordPress "Eliminar".
+ *
+ * Los datos de visualizaciones se conservan para poder recuperarlos
+ * si el plugin se reinstala. Para borrar todo, usar la opción "Desinstalar"
+ * en el panel de plugins.
  *
  * @package Education_Resources_Manager
  */
@@ -9,9 +13,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-global $wpdb;
-
-$table_name = $wpdb->prefix . 'erm_resource_tracking';
-$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
-
-delete_option( 'erm_db_version' );
+// No borrar datos al eliminar el plugin - conservar para reinstalación.
+// La opción "Desinstalar" en el panel de plugins borra todo con confirmación.

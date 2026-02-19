@@ -17,11 +17,47 @@ class ERM_Activator {
 	 */
 	public static function activate() {
 		self::check_requirements();
+		self::register_archived_status();
 		self::create_tables();
+		self::migrate_status_to_post_status();
 		// Diferir flush hasta la siguiente carga: el CPT se registra en init(),
 		// que corre después del activation hook. Si hacemos flush aquí, las
 		// reglas se generan sin el CPT y las URLs dan 404.
 		set_transient( 'erm_flush_rewrite_rules', true, 60 );
+	}
+
+	/**
+	 * Migrate meta status to post_status for existing resources.
+	 * Ensures posts with _erm_publication_status = 'archived' get post_status = 'archived'.
+	 */
+	private static function migrate_status_to_post_status() {
+		$posts = get_posts( array(
+			'post_type'      => 'erm_resource',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		) );
+
+		foreach ( $posts as $post_id ) {
+			$meta_status = get_post_meta( $post_id, '_erm_publication_status', true );
+			$post       = get_post( $post_id );
+			if ( ! $post || empty( $meta_status ) ) {
+				continue;
+			}
+
+			$map = array(
+				'draft'     => 'draft',
+				'published' => 'publish',
+				'archived'  => 'archived',
+			);
+			$target_status = $map[ $meta_status ] ?? 'publish';
+			if ( $post->post_status !== $target_status ) {
+				wp_update_post( array(
+					'ID'          => $post_id,
+					'post_status' => $target_status,
+				) );
+			}
+		}
 	}
 
 	/**
@@ -75,5 +111,26 @@ class ERM_Activator {
 		dbDelta( $sql );
 
 		update_option( 'erm_db_version', ERM_VERSION );
+	}
+
+	/**
+	 * Register custom post status "archived" (needed before migration).
+	 */
+	private static function register_archived_status() {
+		register_post_status(
+			'archived',
+			array(
+				'label'                     => _x( 'Archivado', 'post status', 'education-resources-manager' ),
+				'public'                    => false,
+				'exclude_from_search'       => true,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				'label_count'               => _n_noop(
+					'Archivado <span class="count">(%s)</span>',
+					'Archivados <span class="count">(%s)</span>',
+					'education-resources-manager'
+				),
+			)
+		);
 	}
 }

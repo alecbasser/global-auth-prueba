@@ -50,7 +50,9 @@ CREATE TABLE IF NOT EXISTS {prefix}_erm_resource_tracking (
 | _erm_resource_url        | URL del recurso         | URL                        |
 | _erm_instructor           | Instructor/Autor        | string                     |
 | _erm_price                | Precio                  | string (0/Gratuito)       |
-| _erm_publication_status   | Estado                  | draft, published, archived |
+| _erm_publication_status   | Estado (legacy, sincronizado con wp_posts.post_status) | draft, published, archived |
+
+**Nota:** El estado se sincroniza con `wp_posts.post_status`. Se registra un estado personalizado `archived`; los valores son: `draft`, `publish`, `archived`.
 
 ---
 
