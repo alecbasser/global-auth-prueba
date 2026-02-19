@@ -193,7 +193,7 @@
 
 .erm-resource-card__btn {
 	display: inline-block;
-	width: 100%;
+	width:auto;
 	margin-top: 0.75rem;
 	padding: 0.5rem 1rem;
 	background: #0d6efd;

@@ -17,9 +17,9 @@ Lista recursos con filtros.
 |-----------|--------|---------|--------------------------------|
 | page      | int    | 1       | Página                         |
 | per_page  | int    | 10      | Por página (máx. 50)          |
-| type      | string | -       | course, tutorial, ebook, video |
-| level     | string | -       | beginner, intermediate, advanced |
-| category  | int    | -       | ID de categoría                |
+| type      | string | -       | course, tutorial, ebook, video (inválido = 0 resultados) |
+| level     | string | -       | beginner, intermediate, advanced (inválido = 0 resultados) |
+| category  | int/string | - | ID o slug de categoría (inválido = 0 resultados) |
 | search    | string | -       | Búsqueda por título            |
 
 **Ejemplo:**

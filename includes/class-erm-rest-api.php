@@ -123,7 +123,7 @@ class ERM_REST_API {
 				'sanitize_callback' => 'sanitize_text_field',
 			),
 			'category' => array(
-				'sanitize_callback' => 'absint',
+				'sanitize_callback' => 'sanitize_text_field',
 			),
 			'search'   => array(
 				'sanitize_callback' => 'sanitize_text_field',
@@ -163,32 +163,51 @@ class ERM_REST_API {
 		);
 
 		$type = $request->get_param( 'type' );
-		if ( ! empty( $type ) && in_array( $type, ERM_Post_Type::VALID_TYPES, true ) ) {
-			$meta_query[] = array(
-				'key'   => ERM_Post_Type::META_TYPE,
-				'value' => $type,
-			);
+		if ( ! empty( $type ) ) {
+			if ( in_array( $type, ERM_Post_Type::VALID_TYPES, true ) ) {
+				$meta_query[] = array(
+					'key'   => ERM_Post_Type::META_TYPE,
+					'value' => $type,
+				);
+			} else {
+				$args['post__in'] = array( 0 );
+			}
 		}
 
 		$level = $request->get_param( 'level' );
-		if ( ! empty( $level ) && in_array( $level, ERM_Post_Type::VALID_LEVELS, true ) ) {
-			$meta_query[] = array(
-				'key'   => ERM_Post_Type::META_LEVEL,
-				'value' => $level,
-			);
+		if ( ! empty( $level ) ) {
+			if ( in_array( $level, ERM_Post_Type::VALID_LEVELS, true ) ) {
+				$meta_query[] = array(
+					'key'   => ERM_Post_Type::META_LEVEL,
+					'value' => $level,
+				);
+			} else {
+				$args['post__in'] = array( 0 );
+			}
 		}
 
 		$args['meta_query'] = $meta_query;
 
 		$category = $request->get_param( 'category' );
 		if ( ! empty( $category ) ) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'erm_resource_category',
-					'field'    => 'term_id',
-					'terms'    => absint( $category ),
-				),
-			);
+			$term = null;
+			if ( is_numeric( $category ) ) {
+				$term = get_term( absint( $category ), 'erm_resource_category' );
+			} else {
+				$term = get_term_by( 'slug', $category, 'erm_resource_category' );
+			}
+			if ( $term && ! is_wp_error( $term ) ) {
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => 'erm_resource_category',
+						'field'    => 'term_id',
+						'terms'    => $term->term_id,
+					),
+				);
+			} else {
+				// Categoría inexistente: devolver 0 resultados.
+				$args['post__in'] = array( 0 );
+			}
 		}
 
 		$search = $request->get_param( 'search' );
