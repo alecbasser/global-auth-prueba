@@ -1,0 +1,175 @@
+/**
+ * Education Resources Manager - Admin Styles
+ *
+ * @package Education_Resources_Manager
+ */
+
+.erm-admin {
+	margin: 20px 20px 20px 0;
+}
+
+.erm-admin h1 {
+	margin-bottom: 1.5rem;
+}
+
+.erm-stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+.erm-stat-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	border-radius: 4px;
+	padding: 1.5rem;
+}
+
+.erm-stat-card h3 {
+	margin: 0 0 1rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #1d2327;
+	border-bottom: 1px solid #f0f0f1;
+	padding-bottom: 0.5rem;
+}
+
+.erm-stat-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.erm-stat-list li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.erm-stat-list li:last-child {
+	border-bottom: none;
+}
+
+.erm-stat-label {
+	font-size: 0.9375rem;
+}
+
+.erm-stat-value {
+	font-weight: 600;
+	color: #2271b1;
+}
+
+.erm-stat-total {
+	margin: 1rem 0 0;
+	padding-top: 0.75rem;
+	border-top: 1px solid #f0f0f1;
+	font-weight: 600;
+	font-size: 0.9375rem;
+}
+
+.erm-top-viewed li {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.25rem;
+}
+
+.erm-top-viewed li a {
+	text-decoration: none;
+	color: #2271b1;
+}
+
+.erm-top-viewed li a:hover {
+	text-decoration: underline;
+}
+
+.erm-chart-card {
+	grid-column: 1 / -1;
+}
+
+.erm-chart-container {
+	margin-top: 1rem;
+}
+
+.erm-chart-bars {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.erm-chart-bar-item {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.erm-chart-label {
+	min-width: 80px;
+	font-size: 0.875rem;
+	color: #50575e;
+}
+
+.erm-chart-bar-wrap {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: #f0f0f1;
+	border-radius: 4px;
+	height: 28px;
+	position: relative;
+}
+
+.erm-chart-bar {
+	height: 100%;
+	background: #2271b1;
+	border-radius: 4px;
+	min-width: 4px;
+	transition: width 0.3s ease;
+}
+
+.erm-chart-value {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #1d2327;
+	margin-right: 0.5rem;
+}
+
+.erm-no-data {
+	margin: 0;
+	color: #646970;
+	font-style: italic;
+}
+
+.erm-shortcode-info {
+	background: #f0f6fc;
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #2271b1;
+	padding: 1rem 1.5rem;
+	margin-top: 2rem;
+	border-radius: 0 4px 4px 0;
+}
+
+.erm-shortcode-info h3 {
+	margin: 0 0 0.5rem;
+	font-size: 0.9375rem;
+}
+
+.erm-shortcode-info code {
+	display: inline-block;
+	background: #fff;
+	padding: 0.25rem 0.5rem;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	font-size: 0.9375rem;
+	margin: 0.5rem 0;
+}
+
+.erm-shortcode-info .description {
+	margin: 0.5rem 0 0;
+	font-size: 0.8125rem;
+	color: #646970;
+}
