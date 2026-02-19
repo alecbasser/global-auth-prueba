@@ -94,11 +94,24 @@ class ERM_REST_API {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_stats' ),
-				'permission_callback' => function() {
-					return current_user_can( 'edit_posts' );
-				},
+				'permission_callback' => array( $this, 'check_admin_permission' ),
 			)
 		);
+	}
+
+	/**
+	 * Check if current user has admin-level permissions.
+	 * Supports both nonce-based auth (JS/AJAX) and direct cookie auth (browser URL).
+	 *
+	 * @return bool
+	 */
+	public function check_admin_permission() {
+		if ( current_user_can( 'edit_posts' ) ) {
+			return true;
+		}
+
+		$user_id = wp_validate_auth_cookie( '', 'logged_in' );
+		return $user_id && user_can( $user_id, 'edit_posts' );
 	}
 
 	/**
