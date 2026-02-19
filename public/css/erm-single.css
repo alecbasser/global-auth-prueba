@@ -19,36 +19,9 @@
 	--erm-font-serif: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.erm-single.dark,
-html.dark .erm-single {
-	--erm-bg: #0f172a;
-	--erm-bg-card: #1e293b;
-	--erm-text: #f1f5f9;
-	--erm-text-muted: #94a3b8;
-	--erm-border: #334155;
-}
-
-.erm-single-page {
-	background-color: var(--erm-bg, #ffffff);
-	transition: background-color 0.3s;
-}
-
-html.dark .erm-single-page {
-	--erm-bg: #0f172a;
-	color: #f1f5f9;
-}
-
-html.dark .erm-single-page h1,
-html.dark .erm-single-page .entry-title,
-html.dark .erm-single-page .wp-block-post-title {
-	color: #f1f5f9;
-}
-
 .erm-single {
 	font-family: var(--erm-font-sans);
 	color: var(--erm-text);
-	background-color: var(--erm-bg);
-	transition: color 0.3s, background-color 0.3s;
 }
 
 /* Action buttons: share, favorite (badge style) */
@@ -130,13 +103,6 @@ html.dark .erm-single-page .wp-block-post-title {
 	border-color: rgba(30, 58, 138, 0.2);
 }
 
-.erm-single.dark .erm-badge--primary,
-html.dark .erm-single .erm-badge--primary {
-	background: rgba(96, 165, 250, 0.15);
-	color: #93c5fd;
-	border-color: rgba(96, 165, 250, 0.3);
-}
-
 .erm-badge--neutral {
 	background: var(--erm-bg-card);
 	color: var(--erm-text-muted);
@@ -195,11 +161,6 @@ html.dark .erm-single .erm-badge--primary {
 
 .erm-single__price-value {
 	color: var(--erm-primary);
-}
-
-.erm-single.dark .erm-single__price-value,
-html.dark .erm-single .erm-single__price-value {
-	color: #60a5fa;
 }
 
 /* CTA Button */
@@ -293,49 +254,6 @@ html.dark .erm-single .erm-single__price-value {
 
 .erm-single__prose a:hover {
 	text-decoration: underline;
-}
-
-/* Theme toggle */
-.erm-single__theme-toggle {
-	position: fixed;
-	bottom: 1.5rem;
-	right: 1.5rem;
-	width: 48px;
-	height: 48px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 0;
-	border: 1px solid var(--erm-border);
-	border-radius: 50%;
-	background: var(--erm-bg);
-	color: var(--erm-text);
-	cursor: pointer;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-	z-index: 50;
-	transition: background 0.2s, transform 0.2s;
-}
-
-.erm-single__theme-toggle:hover {
-	transform: scale(1.05);
-}
-
-.erm-theme-icon {
-	font-size: 1.25rem;
-}
-
-.erm-theme-icon--light {
-	display: none;
-}
-
-.erm-single.dark .erm-theme-icon--dark,
-html.dark .erm-single .erm-theme-icon--dark {
-	display: none;
-}
-
-.erm-single.dark .erm-theme-icon--light,
-html.dark .erm-single .erm-theme-icon--light {
-	display: inline;
 }
 
 /* ── Side-by-side layout ── */

@@ -1,43 +1,16 @@
 /**
  * Single Resource - Vanilla JavaScript
- * Dark mode, share, bookmark, nav
+ * Share, bookmark
  */
 
 (function () {
 	'use strict';
 
-	const STORAGE_KEY = 'erm-theme';
 	const BOOKMARK_KEY = 'erm-bookmarks';
 
 	function init() {
-		initTheme();
 		initShare();
 		initBookmark();
-	}
-
-	function initTheme() {
-		const saved = localStorage.getItem(STORAGE_KEY);
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		const root = document.querySelector('.erm-single');
-
-		if (!root) return;
-
-		if (saved === 'dark' || (!saved && prefersDark)) {
-			root.classList.add('dark');
-			document.documentElement.classList.add('dark');
-		} else {
-			root.classList.remove('dark');
-			document.documentElement.classList.remove('dark');
-		}
-
-		const toggle = document.getElementById('erm-theme-toggle');
-		if (toggle) {
-			toggle.addEventListener('click', function () {
-				const isDark = root.classList.toggle('dark');
-				document.documentElement.classList.toggle('dark', isDark);
-				localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
-			});
-		}
 	}
 
 	function initShare() {

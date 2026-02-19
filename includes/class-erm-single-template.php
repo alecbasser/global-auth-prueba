@@ -20,25 +20,6 @@ class ERM_Single_Template {
 		add_filter( 'the_content', array( $this, 'add_resource_meta' ), 10, 1 );
 		add_filter( 'body_class', array( $this, 'body_class' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-		add_action( 'wp_head', array( $this, 'theme_script' ), 1 );
-	}
-
-	/**
-	 * Inline script to prevent flash of wrong theme.
-	 */
-	public function theme_script() {
-		if ( ! is_singular( ERM_Post_Type::POST_TYPE ) ) {
-			return;
-		}
-		?>
-		<script>
-		(function(){
-			var s=localStorage.getItem('erm-theme');
-			var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
-			if(s==='dark'||(!s&&d)){document.documentElement.classList.add('dark');}
-		})();
-		</script>
-		<?php
 	}
 
 	/**
@@ -175,10 +156,6 @@ class ERM_Single_Template {
 				<div class="erm-single__prose"><?php echo $content; ?></div>
 			</div>
 
-			<button type="button" class="erm-single__theme-toggle" id="erm-theme-toggle" aria-label="<?php esc_attr_e( 'Cambiar tema', 'education-resources-manager' ); ?>">
-				<span class="erm-theme-icon erm-theme-icon--dark" aria-hidden="true">🌙</span>
-				<span class="erm-theme-icon erm-theme-icon--light" aria-hidden="true">☀</span>
-			</button>
 		</div>
 		<?php
 		return ob_get_clean();

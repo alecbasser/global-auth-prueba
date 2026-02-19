@@ -8,13 +8,15 @@
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 1.5rem;
+	font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+	color: #0f172a;
 }
 
 /* Filters */
 .erm-filters {
-	background: #f8f9fa;
-	border: 1px solid #e9ecef;
-	border-radius: 8px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
 	padding: 1.25rem;
 	margin-bottom: 2rem;
 }
@@ -36,14 +38,14 @@
 	font-size: 0.875rem;
 	font-weight: 600;
 	margin-bottom: 0.35rem;
-	color: #495057;
+	color: #64748b;
 }
 
 .erm-filter-group .erm-filter,
 .erm-filter-group input[type="search"] {
 	padding: 0.5rem 0.75rem;
-	border: 1px solid #ced4da;
-	border-radius: 4px;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
 	font-size: 0.9375rem;
 	background: #fff;
 }
@@ -55,8 +57,8 @@
 
 .erm-filter-group input[type="search"]:focus {
 	outline: none;
-	border-color: #0d6efd;
-	box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+	border-color: #1e3a8a;
+	box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.15);
 }
 
 /* Loading state */
@@ -69,8 +71,8 @@
 	display: inline-block;
 	width: 40px;
 	height: 40px;
-	border: 3px solid #e9ecef;
-	border-top-color: #0d6efd;
+	border: 3px solid #e2e8f0;
+	border-top-color: #1e3a8a;
 	border-radius: 50%;
 	animation: erm-spin 0.8s linear infinite;
 }
@@ -83,7 +85,7 @@
 
 .erm-loading p {
 	margin-top: 1rem;
-	color: #6c757d;
+	color: #64748b;
 }
 
 /* Resources grid */
@@ -98,8 +100,8 @@
 
 .erm-resource-card {
 	background: #fff;
-	border: 1px solid #e9ecef;
-	border-radius: 8px;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
 	overflow: hidden;
 	transition: box-shadow 0.2s ease, transform 0.2s ease;
 	display: flex;
@@ -107,12 +109,13 @@
 }
 
 .erm-resource-card:hover {
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+	transform: translateY(-2px);
 }
 
 .erm-resource-card__image {
 	aspect-ratio: 16 / 9;
-	background: #e9ecef;
+	background: #f8fafc;
 	overflow: hidden;
 }
 
@@ -137,14 +140,25 @@
 	font-size: 0.75rem;
 	font-weight: 600;
 	text-transform: uppercase;
-	letter-spacing: 0.02em;
-	color: #6c757d;
+	letter-spacing: 0.05em;
 }
 
 .erm-resource-card__meta span {
-	background: #e9ecef;
-	padding: 0.2rem 0.5rem;
-	border-radius: 4px;
+	padding: 0.2rem 0.6rem;
+	border-radius: 9999px;
+	border: 1px solid;
+}
+
+.erm-resource-card__meta span:first-child {
+	background: rgba(30, 58, 138, 0.1);
+	color: #1e3a8a;
+	border-color: rgba(30, 58, 138, 0.2);
+}
+
+.erm-resource-card__meta span:nth-child(2) {
+	background: #f8fafc;
+	color: #64748b;
+	border-color: #e2e8f0;
 }
 
 .erm-resource-card__title {
@@ -152,6 +166,7 @@
 	font-weight: 600;
 	margin: 0 0 0.5rem;
 	line-height: 1.5;
+	color: #0f172a;
 }
 
 .erm-resource-card__title a {
@@ -160,12 +175,13 @@
 }
 
 .erm-resource-card__title a:hover {
+	color: #1e3a8a;
 	text-decoration: underline;
 }
 
 .erm-resource-card__excerpt {
 	font-size: 0.875rem;
-	color: #6c757d;
+	color: #64748b;
 	line-height: 1.5;
 	margin: 0 0 1rem;
 	flex: 1;
@@ -177,39 +193,40 @@
 	align-items: center;
 	margin-top: auto;
 	padding-top: 1rem;
-	border-top: 1px solid #e9ecef;
+	border-top: 1px solid #e2e8f0;
 }
 
 .erm-resource-card__duration {
 	font-size: 0.875rem;
-	color: #6c757d;
+	color: #64748b;
 }
 
 .erm-resource-card__price {
 	font-size: 0.875rem;
 	font-weight: 600;
-	color: #198754;
+	color: #1e3a8a;
 }
 
 .erm-resource-card__btn {
 	display: inline-block;
-	width:auto;
+	width: auto;
 	margin-top: 0.75rem;
-	padding: 0.5rem 1rem;
-	background: #0d6efd;
+	padding: 0.6rem 1.25rem;
+	background: #1e3a8a;
 	color: #fff;
 	border: none;
-	border-radius: 4px;
+	border-radius: 12px;
 	font-size: 0.9375rem;
-	font-weight: 500;
+	font-weight: 600;
 	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
 	transition: background 0.2s ease;
+	box-shadow: 0 4px 15px -3px rgba(30, 58, 138, 0.3);
 }
 
 .erm-resource-card__btn:hover {
-	background: #0b5ed7;
+	background: #1e40af;
 	color: #fff;
 }
 
@@ -230,17 +247,18 @@
 
 .erm-pagination__btn {
 	padding: 0.5rem 1rem;
-	border: 1px solid #dee2e6;
+	border: 1px solid #e2e8f0;
 	background: #fff;
-	border-radius: 4px;
+	border-radius: 8px;
 	font-size: 0.9375rem;
 	cursor: pointer;
 	transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .erm-pagination__btn:hover:not(:disabled) {
-	background: #e9ecef;
-	border-color: #adb5bd;
+	background: #f8fafc;
+	border-color: #1e3a8a;
+	color: #1e3a8a;
 }
 
 .erm-pagination__btn:disabled {
@@ -249,14 +267,14 @@
 }
 
 .erm-pagination__btn--current {
-	background: #0d6efd;
+	background: #1e3a8a;
 	color: #fff;
-	border-color: #0d6efd;
+	border-color: #1e3a8a;
 }
 
 .erm-pagination__info {
 	font-size: 0.875rem;
-	color: #6c757d;
+	color: #64748b;
 	margin: 0 1rem;
 }
 
@@ -264,83 +282,15 @@
 .erm-no-results {
 	text-align: center;
 	padding: 3rem 1rem;
-	background: #f8f9fa;
-	border-radius: 8px;
+	background: #f8fafc;
+	border-radius: 12px;
 	margin-top: 2rem;
 }
 
 .erm-no-results p {
 	margin: 0;
-	color: #6c757d;
+	color: #64748b;
 	font-size: 1rem;
-}
-
-/* Single resource meta box */
-.erm-single-meta-box {
-	background: #f8f9fa;
-	border: 1px solid #e9ecef;
-	border-radius: 8px;
-	padding: 1.25rem 1.5rem;
-	margin-bottom: 2rem;
-}
-
-.erm-single-meta {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 0.5rem;
-	margin-bottom: 1rem;
-	font-size: 0.9375rem;
-	color: #495057;
-}
-
-.erm-single-meta:last-child {
-	margin-bottom: 0;
-}
-
-.erm-meta-badge {
-	display: inline-block;
-	padding: 0.25rem 0.6rem;
-	background: #e9ecef;
-	border-radius: 4px;
-	font-weight: 600;
-	font-size: 0.8125rem;
-}
-
-.erm-meta-sep {
-	color: #adb5bd;
-	font-weight: 400;
-}
-
-.erm-meta-duration,
-.erm-meta-instructor,
-.erm-meta-price {
-	font-weight: 500;
-}
-
-.erm-single-actions {
-	margin-top: 1rem;
-	padding-top: 1rem;
-	border-top: 1px solid #e9ecef;
-}
-
-.erm-btn {
-	display: inline-block;
-	padding: 0.5rem 1.25rem;
-	border-radius: 4px;
-	font-weight: 500;
-	text-decoration: none;
-	transition: background 0.2s ease;
-}
-
-.erm-btn-primary {
-	background: #0d6efd;
-	color: #fff;
-}
-
-.erm-btn-primary:hover {
-	background: #0b5ed7;
-	color: #fff;
 }
 
 /* Responsive */
